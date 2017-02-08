@@ -63,52 +63,49 @@ public class JerkSONParserTest {
 
     @Test
     public void parseEntryIntoGroceryItemTestOne() {
-        GroceryItem expected = new GroceryItem("Milk", 3.23, "1/25/2016");
+        GroceryItem expected = new GroceryItem("milk", 3.23, "1/25/2016");
 
         GroceryItem actual = null;
 
         try {
             actual = parser.parseEntryIntoGroceryItem("naMe:Milk;price:3.23;type:Food;expiration:1/25/2016");
         }
-        catch ( StringNotValidJerkSON e ) {
-
-        }
+        catch ( StringNotValidJerkSON e ) {}
 
         Assert.assertTrue(expected.equals(actual));
     }
 
     @Test
     public void parseEntryIntoGroceryItemTestTwo() {
-        GroceryItem expected = new GroceryItem("Bread", 1.23, "1/02/2016");
+        GroceryItem expected = new GroceryItem("bread", 1.23, "1/02/2016");
 
         GroceryItem actual = null;
 
         try {
             actual = parser.parseEntryIntoGroceryItem("naME:BreaD;price:1.23;type:Food;expiration:1/02/2016");
         }
-        catch ( StringNotValidJerkSON e ) {
-
-        }
+        catch ( StringNotValidJerkSON e ) {}
 
         Assert.assertTrue(expected.equals(actual));
     }
 
-    @Test
-    public void parseEntryIntoGroceryItemExceptionTest() {
-        exception.expect(StringNotValidJerkSON.class);
-        try {
-            parser.parseEntryIntoGroceryItem("garbage in");
-        }
-        catch ( StringNotValidJerkSON e ) {
-
-        }
+    @Test(expected = StringNotValidJerkSON.class)
+    public void parseEntryIntoGroceryItemExceptionTest() throws StringNotValidJerkSON {
+        parser.parseEntryIntoGroceryItem("garbage in");
     }
 
     @Test
     public void parseGroceryNameTestOne() {
         String expected = "milk";
 
-        String actual = parser.parseGroceryName("naMe:Milk;price:3.23;type:Food;expiration:1/25/2016");
+        String actual = null;
+
+        try {
+            actual = parser.parseGroceryName("naMe:Milk;price:3.23;type:Food;expiration:1/25/2016");
+        }
+        catch ( StringNotValidJerkSON e ) {
+
+        }
 
         Assert.assertEquals(expected, actual);
     }
@@ -117,7 +114,14 @@ public class JerkSONParserTest {
     public void parseGroceryNameTestTwo() {
         String expected = "bread";
 
-        String actual = parser.parseGroceryName("naME:BreaD;price:1.23;type:Food;expiration:1/02/2016");
+        String actual = null;
+
+        try {
+            actual = parser.parseGroceryName("naME:BreaD;price:1.23;type:Food;expiration:1/02/2016");
+        }
+        catch ( StringNotValidJerkSON e ) {
+
+        }
 
         Assert.assertEquals(expected, actual);
     }
@@ -126,7 +130,14 @@ public class JerkSONParserTest {
     public void parseGroceryNameTestThree() {
         String expected = "cookies";
 
-        String actual = parser.parseGroceryName("naMe:Cookies;price:2.25;type:Food%expiration:1/25/2016");
+        String actual = null;
+
+        try {
+            actual = parser.parseGroceryName("naMe:Cookies;price:2.25;type:Food%expiration:1/25/2016");
+        }
+        catch ( StringNotValidJerkSON e ) {
+
+        }
 
         Assert.assertEquals(expected, actual);
     }
@@ -135,13 +146,159 @@ public class JerkSONParserTest {
     public void parseGroceryNameTestFour() {
         String expected = "cookies";
 
-        String actual = parser.parseGroceryName("naMe:Co0kieS;pRice:2.25;type:Food;expiration:1/25/2016");
+        String actual = null;
+
+        try {
+            actual = parser.parseGroceryName("naMe:Co0kieS;pRice:2.25;type:Food;expiration:1/25/2016");
+        }
+        catch ( StringNotValidJerkSON e ) {
+
+        }
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test(expected = StringNotValidJerkSON.class)
+    public void parseGroceryNameExceptionTestOne() throws StringNotValidJerkSON {
+        parser.parseGroceryName("naMe:;price:3.23;type:Food;expiration:1/04/2016");
+    }
+
+    @Test(expected = StringNotValidJerkSON.class)
+    public void parseGroceryNameExceptionTestTwo() throws StringNotValidJerkSON {
+        parser.parseGroceryName("naMe:;price:3.23;type:Food^expiration:1/04/2016");
+    }
+
+    @Test
+    public void parseItemPriceTestOne() {
+        Double expected = 3.23;
+
+        Double actual = null;
+
+        try {
+            actual = parser.parseItemPrice("naMe:Milk;price:3.23;type:Food;expiration:1/25/2016");
+        }
+        catch ( StringNotValidJerkSON e ) {
+
+        }
 
         Assert.assertEquals(expected, actual);
     }
 
     @Test
-    public void parseGroceryNameExceptionTest() {
+    public void parseItemPriceTestTwo() {
+        Double expected = 1.23;
 
+        Double actual = null;
+
+        try {
+            actual = parser.parseItemPrice("naME:BreaD;price:1.23;type:Food;expiration:1/02/2016");
+        }
+        catch (StringNotValidJerkSON e) {
+
+        }
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void parseItemPriceTestThree() {
+        Double expected = 2.25;
+
+        Double actual = null;
+
+        try {
+            actual = parser.parseItemPrice("naMe:Cookies;price:2.25;type:Food%expiration:1/25/2016");
+        }
+        catch (StringNotValidJerkSON e) {
+
+        }
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void parseItemPriceTestFour() {
+        Double expected = 0.25;
+
+        Double actual = null;
+
+        try {
+            actual = parser.parseItemPrice("naMe:apPles;prIce:0.25;type:Food;expiration:1/23/2016");
+        }
+        catch (StringNotValidJerkSON e) {
+
+        }
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test(expected = StringNotValidJerkSON.class)
+    public void parseItemPriceTestException() throws StringNotValidJerkSON {
+        parser.parseItemPrice("naMe:MilK;priCe:;type:Food;expiration:4/25/2016");
+    }
+
+    @Test
+    public void parseExpirationDateTestOne() {
+        String expected = "1/25/2016";
+        String actual = null;
+
+        try {
+            actual = parser.parseExpirationDate("naMe:Milk;price:3.23;type:Food;expiration:1/25/2016");
+        }
+        catch ( StringNotValidJerkSON e ) {
+
+        }
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void parseExpirationDateTestTwo() {
+        String expected = "1/02/2016";
+        String actual = null;
+
+        try {
+            actual = parser.parseExpirationDate("naME:BreaD;price:1.23;type:Food;expiration:1/02/2016");
+        }
+        catch ( StringNotValidJerkSON e ) {
+
+        }
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void parseExpirationDateTestThree() {
+        String expected = "1/25/2016";
+        String actual = null;
+
+        try {
+            actual = parser.parseExpirationDate("NAMe:BrEAD;price:1.23;type:Food;expiration:1/25/2016");
+        }
+        catch ( StringNotValidJerkSON e ) {
+
+        }
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void parseExpirationDateTestFour() {
+        String expected = "1/04/2016";
+        String actual = null;
+
+        try {
+            actual = parser.parseExpirationDate("naMe:;price:3.23;type:Food^expiration:1/04/2016");
+        }
+        catch ( StringNotValidJerkSON e ) {
+
+        }
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test(expected = StringNotValidJerkSON.class)
+    public void parseExpirationDateTestException() throws StringNotValidJerkSON {
+        parser.parseExpirationDate("garbage in");
     }
 }

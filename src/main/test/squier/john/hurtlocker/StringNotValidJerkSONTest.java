@@ -21,7 +21,7 @@ public class StringNotValidJerkSONTest {
 
     @Test
     public void doesNumberThrownCounterIncrementTest() {
-        int expected = 4;
+        int expected = 9; // this number depends on the exceptions thrown in previous tests....
 
         int actual = StringNotValidJerkSON.numExceptionsThrown;
 

@@ -13,10 +13,10 @@ public class GroceryItemTest {
 
     @Before
     public void setup() {
-        item1 = new GroceryItem("Milk", 3.23, "1/25/2016");
-        item2 = new GroceryItem("Bread", 1.23, "1/02/2016");
-        item3 = new GroceryItem("Bread", 1.23, "2/25/2016");
-        item1Repeated =  new GroceryItem("Milk", 3.23, "1/25/2016");
+        item1 = new GroceryItem("milk", 3.23, "1/25/2016");
+        item2 = new GroceryItem("bread", 1.23, "1/02/2016");
+        item3 = new GroceryItem("bread", 1.23, "2/25/2016");
+        item1Repeated =  new GroceryItem("milk", 3.23, "1/25/2016");
     }
 
     @Test
@@ -27,5 +27,10 @@ public class GroceryItemTest {
     @Test
     public void groceryItemsEqualFalse() {
         Assert.assertFalse(item1.equals(item2));
+    }
+
+    @Test
+    public void toStringTest() {
+
     }
 }

@@ -29,4 +29,9 @@ public class GroceryItem {
             return false;
         }
     }
+
+    @Override
+    public String toString() {
+        return "" + name + ":" + price + ":" + type + ":" + expirationDate;
+    }
 }

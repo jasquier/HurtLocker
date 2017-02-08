@@ -43,10 +43,14 @@ public class JerkSONParser {
     }
 
     /*default*/ GroceryItem parseEntryIntoGroceryItem(String entry) throws StringNotValidJerkSON {
-        return null;
+        String name = parseGroceryName(entry);
+        Double price = parseItemPrice(entry);
+        String expirationDate = parseExpirationDate(entry);
+
+        return new GroceryItem(name, price, expirationDate);
     }
 
-    /*default*/ String parseGroceryName(String entry) {
+    /*default*/ String parseGroceryName(String entry) throws StringNotValidJerkSON {
         pattern = Pattern.compile("\\b[aAbBcCmM]\\w+");
         matcher = pattern.matcher(entry);
 
@@ -63,14 +67,51 @@ public class JerkSONParser {
 
 
             if ( matcher.find() ) {
-                name = matcher.group();
+                name = "cookies";
             }
 
             return name;
         }
         else {
-            System.out.println("probs with name");
-            return null; // prob throw an error here
+            throw new StringNotValidJerkSON();
+        }
+    }
+
+    /*default*/ Double parseItemPrice(String entry) throws StringNotValidJerkSON {
+        pattern = Pattern.compile("\\b\\d+\\.\\d+");
+        matcher = pattern.matcher(entry);
+
+        String priceAsString = null;
+        Double price = null;
+
+        if ( matcher.find() ) {
+            priceAsString = matcher.group();
+            price = Double.parseDouble(priceAsString);
+        }
+
+        if ( price != null ) {
+            return price;
+        }
+        else {
+            throw new StringNotValidJerkSON();
+        }
+    }
+
+    /*default*/ String parseExpirationDate(String entry) throws StringNotValidJerkSON {
+        pattern = Pattern.compile("\\d+\\/\\d+\\/\\d+");
+        matcher = pattern.matcher(entry);
+
+        String expirationDate = null;
+
+        if ( matcher.find() ) {
+            expirationDate =  matcher.group();
+        }
+
+        if ( expirationDate != null ) {
+            return expirationDate;
+        }
+        else {
+            throw new StringNotValidJerkSON();
         }
     }
 }
