@@ -44,11 +44,11 @@ public class JerkSONParser {
 
 
 
-    /*default*/ String[] splitStringByEntryDelimiter(String entryDelimiter) {
+    String[] splitStringByEntryDelimiter(String entryDelimiter) {
         return toParse.split(entryDelimiter);
     }
 
-    /*default*/ GroceryItem parseEntryIntoGroceryItem(String entry) throws StringNotValidJerkSON {
+    GroceryItem parseEntryIntoGroceryItem(String entry) throws StringNotValidJerkSON {
         String name = parseGroceryName(entry);
         Double price = parseItemPrice(entry);
         String expirationDate = parseExpirationDate(entry);
@@ -56,7 +56,7 @@ public class JerkSONParser {
         return new GroceryItem(name, price, expirationDate);
     }
 
-    /*default*/ String parseGroceryName(String entry) throws StringNotValidJerkSON {
+    String parseGroceryName(String entry) throws StringNotValidJerkSON {
         pattern = Pattern.compile("\\b[aAbBcCmM]\\w+");
         matcher = pattern.matcher(entry);
 
@@ -83,7 +83,7 @@ public class JerkSONParser {
         }
     }
 
-    /*default*/ Double parseItemPrice(String entry) throws StringNotValidJerkSON {
+    Double parseItemPrice(String entry) throws StringNotValidJerkSON {
         pattern = Pattern.compile("\\b\\d+\\.\\d+");
         matcher = pattern.matcher(entry);
 
@@ -103,7 +103,7 @@ public class JerkSONParser {
         }
     }
 
-    /*default*/ String parseExpirationDate(String entry) throws StringNotValidJerkSON {
+    String parseExpirationDate(String entry) throws StringNotValidJerkSON {
         pattern = Pattern.compile("\\d+\\/\\d+\\/\\d+");
         matcher = pattern.matcher(entry);
 
