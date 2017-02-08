@@ -6,6 +6,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.security.acl.Group;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by johnsquier on 2/8/17.
  */
@@ -24,33 +28,64 @@ public class JerkSONParserTest {
     }
 
     @Test
+    public void parseJerkSONTestOne() {
+        GroceryItem g1 = new GroceryItem("milk", 3.23, "1/25/2016");
+        GroceryItem g2 = new GroceryItem("bread", 1.23, "1/02/2016");
+        GroceryItem g3 = new GroceryItem("bread", 1.23, "2/25/2016");
+
+        List<GroceryItem> expectedList = new ArrayList<GroceryItem>();
+        expectedList.add(g1);
+        expectedList.add(g2);
+        expectedList.add(g3);
+
+        JerkSONParser parser2 = new JerkSONParser("naMe:Milk;price:3.23;type:Food;expiration:1/25/2016##naME:BreaD;price:1.23;type:Food;expiration:1/02/2016##NAMe:BrEAD;price:1.23;type:Food;expiration:2/25/2016");
+        List<GroceryItem> actualList = parser2.parseJerkSON();
+
+        boolean listsEqual = true;
+        if ( expectedList.size() == actualList.size() ) {
+
+            for (int i = 0; i < expectedList.size(); i++ ) {
+
+                if ( !expectedList.get(i).equals(actualList.get(i)) ) {
+                    listsEqual = false;
+                }
+            }
+        }
+        else {
+            listsEqual = false;
+        }
+
+        Assert.assertTrue(listsEqual);
+    }
+
+    @Test
     public void splitStringByEntryDelimiterTest() {
         String[] expected = new String[28];
 
-        expected[0]  = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016";
+        expected[0]  = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016"; // 1
         expected[1]  = "naME:BreaD;price:1.23;type:Food;expiration:1/02/2016";
         expected[2]  = "NAMe:BrEAD;price:1.23;type:Food;expiration:2/25/2016";
-        expected[3]  = "naMe:MiLK;price:3.23;type:Food^expiration:1/11/2016";
+        expected[3]  = "naMe:MiLK;price:3.23;type:Food^expiration:1/11/2016"; // 2
         expected[4]  = "naMe:Cookies;price:2.25;type:Food%expiration:1/25/2016";
         expected[5]  = "naMe:CoOkieS;price:2.25;type:Food*expiration:1/25/2016";
         expected[6]  = "naMe:COokIes;price:2.25;type:Food;expiration:3/22/2016";
         expected[7]  = "naMe:COOkieS;price:2.25;type:Food;expiration:1/25/2016";
-        expected[8]  = "NAME:MilK;price:3.23;type:Food;expiration:1/17/2016";
-        expected[9]  = "naMe:MilK;price:1.23;type:Food!expiration:4/25/2016";
+        expected[8]  = "NAME:MilK;price:3.23;type:Food;expiration:1/17/2016"; // 3
+        expected[9]  = "naMe:MilK;price:1.23;type:Food!expiration:4/25/2016"; // 4
         expected[10] = "naMe:apPles;price:0.25;type:Food;expiration:1/23/2016";
         expected[11] = "naMe:apPles;price:0.23;type:Food;expiration:5/02/2016";
         expected[12] = "NAMe:BrEAD;price:1.23;type:Food;expiration:1/25/2016";
         expected[13] = "naMe:;price:3.23;type:Food;expiration:1/04/2016";
-        expected[14] = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016";
+        expected[14] = "naMe:Milk;price:3.23;type:Food;expiration:1/25/2016"; // 5
         expected[15] = "naME:BreaD;price:1.23;type:Food@expiration:1/02/2016";
         expected[16] = "NAMe:BrEAD;price:1.23;type:Food@expiration:2/25/2016";
-        expected[17] = "naMe:MiLK;priCe:;type:Food;expiration:1/11/2016";
+        expected[17] = "naMe:MiLK;priCe:;type:Food;expiration:1/11/2016"; // error
         expected[18] = "naMe:Cookies;price:2.25;type:Food;expiration:1/25/2016";
         expected[19] = "naMe:Co0kieS;pRice:2.25;type:Food;expiration:1/25/2016";
         expected[20] = "naMe:COokIes;price:2.25;type:Food;expiration:3/22/2016";
         expected[21] = "naMe:COOkieS;Price:2.25;type:Food;expiration:1/25/2016";
-        expected[22] = "NAME:MilK;price:3.23;type:Food;expiration:1/17/2016";
-        expected[23] = "naMe:MilK;priCe:;type:Food;expiration:4/25/2016";
+        expected[22] = "NAME:MilK;price:3.23;type:Food;expiration:1/17/2016"; // 6 Milks
+        expected[23] = "naMe:MilK;priCe:;type:Food;expiration:4/25/2016"; // error
         expected[24] = "naMe:apPles;prIce:0.25;type:Food;expiration:1/23/2016";
         expected[25] = "naMe:apPles;pRice:0.23;type:Food;expiration:5/02/2016";
         expected[26] = "NAMe:BrEAD;price:1.23;type:Food;expiration:1/25/2016";

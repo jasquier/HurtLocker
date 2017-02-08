@@ -2,6 +2,9 @@ package squier.john.hurtlocker;
 
 import org.apache.commons.io.IOUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
 
     public String readRawDataToString() throws Exception{
@@ -12,8 +15,16 @@ public class Main {
 
     public static void main(String[] args) throws Exception{
         String output = (new Main()).readRawDataToString();
-        System.out.println(output);
 
         JerkSONParser parser = new JerkSONParser(output);
+
+        List<GroceryItem> listOfGroceryItems = parser.parseJerkSON();
+
+        for ( GroceryItem gi : listOfGroceryItems ) {
+            System.out.println(gi);
+        }
+        System.out.println(StringNotValidJerkSON.numExceptionsThrown);
+
+        // output
     }
 }

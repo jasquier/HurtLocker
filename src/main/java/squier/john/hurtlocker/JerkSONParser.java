@@ -23,9 +23,9 @@ public class JerkSONParser {
     public List<GroceryItem> parseJerkSON() {
         String[] splitByEntryDelimiter = splitStringByEntryDelimiter("##");
 
-        GroceryItem tempGroceryItem;
+        GroceryItem tempGroceryItem = null;
 
-        for ( int i = 0; i < splitByEntryDelimiter.length; i++ ) {
+        for (int i = 0; i < splitByEntryDelimiter.length; i++) {
             try {
                 tempGroceryItem = parseEntryIntoGroceryItem(splitByEntryDelimiter[i]);
             }
@@ -33,10 +33,16 @@ public class JerkSONParser {
 
             }
 
+            if ( tempGroceryItem != null ) {
+                groceryItemList.add(tempGroceryItem);
+            }
         }
 
-        return null;
+        return groceryItemList;
     }
+
+
+
 
     /*default*/ String[] splitStringByEntryDelimiter(String entryDelimiter) {
         return toParse.split(entryDelimiter);
