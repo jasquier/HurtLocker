@@ -20,11 +20,8 @@ public class Main {
 
         List<GroceryItem> listOfGroceryItems = parser.parseJerkSON();
 
-        for ( GroceryItem gi : listOfGroceryItems ) {
-            System.out.println(gi);
-        }
-        System.out.println(StringNotValidJerkSON.numExceptionsThrown);
+        JerkSONcliOutputer jerkSONcliOutputer = new JerkSONcliOutputer(listOfGroceryItems);
 
-        // output
+        jerkSONcliOutputer.printGroceryListToCLI();
     }
 }

@@ -17,6 +17,14 @@ public class GroceryItem {
         this.expirationDate = expirationDate;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
     public boolean equals(GroceryItem other) {
         if ( this.name.equals(other.name)
                 && this.price == other.price
