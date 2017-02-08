@@ -2,7 +2,9 @@ package squier.john.hurtlocker;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Created by johnsquier on 2/8/17.
@@ -11,6 +13,9 @@ public class JerkSONParserTest {
 
     JerkSONParser parser;
     String rawData;
+
+    @Rule
+    public final ExpectedException exception =  ExpectedException.none();
 
     @Before
     public void setup() {
@@ -54,5 +59,29 @@ public class JerkSONParserTest {
         String[] actual = parser.splitStringByEntryDelimiter("##");
 
         Assert.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void parseEntryIntoGroceryItemTestOne() {
+        GroceryItem expected = new GroceryItem("Milk", 3.23, "1/25/2016");
+
+        GroceryItem actual = parser.parseEntryIntoGroceryItem("naMe:Milk;price:3.23;type:Food;expiration:1/25/2016");
+
+        Assert.assertTrue(expected.equals(actual));
+    }
+
+    @Test
+    public void parseEntryIntoGroceryItemTestTwo() {
+        GroceryItem expected = new GroceryItem("Bread", 1.23, "1/02/2016");
+
+        GroceryItem actual = parser.parseEntryIntoGroceryItem("naME:BreaD;price:1.23;type:Food;expiration:1/02/2016");
+
+        Assert.assertTrue(expected.equals(actual));
+    }
+
+    @Test
+    public void parseEntryIntoGroceryItemExceptionTest() {
+        exception.expect(StringNotValidJerkSON.class);
+        parser.parseEntryIntoGroceryItem("garbage in");
     }
 }

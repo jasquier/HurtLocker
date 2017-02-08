@@ -1,5 +1,7 @@
 package squier.john.hurtlocker;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,19 +10,33 @@ import java.util.regex.Pattern;
  */
 public class JerkSONParser {
 
-    String toParse;
-    Pattern patten;
-    Matcher matcher;
+    private String toParse;
+    private List<GroceryItem> groceryItemList;
+    private Pattern patten;
+    private Matcher matcher;
 
     public JerkSONParser(String toParse) {
         this.toParse = toParse;
+        groceryItemList = new ArrayList<GroceryItem>();
     }
 
-    public String[] splitStringByEntryDelimiter(String entryDelimiter) {
+    public List<GroceryItem> parseJerkSON() {
+        String[] splitByEntryDelimiter = splitStringByEntryDelimiter("##");
+
+        GroceryItem tempGroceryItem;
+        for ( int i = 0; i < splitByEntryDelimiter.length; i++ ) {
+                tempGroceryItem = parseEntryIntoGroceryItem(splitByEntryDelimiter[i]);
+
+        }
+
+        return null;
+    }
+
+    /*default*/ String[] splitStringByEntryDelimiter(String entryDelimiter) {
         return toParse.split(entryDelimiter);
     }
 
-    private GroceryItem[] parseEntryIntoGroceryItem(String entry) {
+    /*default*/ GroceryItem parseEntryIntoGroceryItem(String entry) {
         return null;
     }
 }
