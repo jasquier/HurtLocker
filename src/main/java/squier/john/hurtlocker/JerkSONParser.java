@@ -12,7 +12,7 @@ public class JerkSONParser {
 
     private String toParse;
     private List<GroceryItem> groceryItemList;
-    private Pattern patten;
+    private Pattern pattern;
     private Matcher matcher;
 
     public JerkSONParser(String toParse) {
@@ -24,8 +24,14 @@ public class JerkSONParser {
         String[] splitByEntryDelimiter = splitStringByEntryDelimiter("##");
 
         GroceryItem tempGroceryItem;
+
         for ( int i = 0; i < splitByEntryDelimiter.length; i++ ) {
+            try {
                 tempGroceryItem = parseEntryIntoGroceryItem(splitByEntryDelimiter[i]);
+            }
+            catch ( StringNotValidJerkSON e ) {
+
+            }
 
         }
 
@@ -36,7 +42,35 @@ public class JerkSONParser {
         return toParse.split(entryDelimiter);
     }
 
-    /*default*/ GroceryItem parseEntryIntoGroceryItem(String entry) {
+    /*default*/ GroceryItem parseEntryIntoGroceryItem(String entry) throws StringNotValidJerkSON {
         return null;
+    }
+
+    /*default*/ String parseGroceryName(String entry) {
+        pattern = Pattern.compile("\\b[aAbBcCmM]\\w+");
+        matcher = pattern.matcher(entry);
+
+        String name = null;
+
+        if ( matcher.find() ) {
+            name = matcher.group();
+            name = name.toLowerCase();
+        }
+
+        if ( name != null ) {
+            pattern = Pattern.compile("[Cc]..[kK][iI][eE][sS]");
+            matcher = pattern.matcher(name);
+
+
+            if ( matcher.find() ) {
+                name = matcher.group();
+            }
+
+            return name;
+        }
+        else {
+            System.out.println("probs with name");
+            return null; // prob throw an error here
+        }
     }
 }

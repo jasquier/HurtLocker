@@ -65,7 +65,14 @@ public class JerkSONParserTest {
     public void parseEntryIntoGroceryItemTestOne() {
         GroceryItem expected = new GroceryItem("Milk", 3.23, "1/25/2016");
 
-        GroceryItem actual = parser.parseEntryIntoGroceryItem("naMe:Milk;price:3.23;type:Food;expiration:1/25/2016");
+        GroceryItem actual = null;
+
+        try {
+            actual = parser.parseEntryIntoGroceryItem("naMe:Milk;price:3.23;type:Food;expiration:1/25/2016");
+        }
+        catch ( StringNotValidJerkSON e ) {
+
+        }
 
         Assert.assertTrue(expected.equals(actual));
     }
@@ -74,7 +81,14 @@ public class JerkSONParserTest {
     public void parseEntryIntoGroceryItemTestTwo() {
         GroceryItem expected = new GroceryItem("Bread", 1.23, "1/02/2016");
 
-        GroceryItem actual = parser.parseEntryIntoGroceryItem("naME:BreaD;price:1.23;type:Food;expiration:1/02/2016");
+        GroceryItem actual = null;
+
+        try {
+            actual = parser.parseEntryIntoGroceryItem("naME:BreaD;price:1.23;type:Food;expiration:1/02/2016");
+        }
+        catch ( StringNotValidJerkSON e ) {
+
+        }
 
         Assert.assertTrue(expected.equals(actual));
     }
@@ -82,6 +96,52 @@ public class JerkSONParserTest {
     @Test
     public void parseEntryIntoGroceryItemExceptionTest() {
         exception.expect(StringNotValidJerkSON.class);
-        parser.parseEntryIntoGroceryItem("garbage in");
+        try {
+            parser.parseEntryIntoGroceryItem("garbage in");
+        }
+        catch ( StringNotValidJerkSON e ) {
+
+        }
+    }
+
+    @Test
+    public void parseGroceryNameTestOne() {
+        String expected = "milk";
+
+        String actual = parser.parseGroceryName("naMe:Milk;price:3.23;type:Food;expiration:1/25/2016");
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void parseGroceryNameTestTwo() {
+        String expected = "bread";
+
+        String actual = parser.parseGroceryName("naME:BreaD;price:1.23;type:Food;expiration:1/02/2016");
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void parseGroceryNameTestThree() {
+        String expected = "cookies";
+
+        String actual = parser.parseGroceryName("naMe:Cookies;price:2.25;type:Food%expiration:1/25/2016");
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void parseGroceryNameTestFour() {
+        String expected = "cookies";
+
+        String actual = parser.parseGroceryName("naMe:Co0kieS;pRice:2.25;type:Food;expiration:1/25/2016");
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void parseGroceryNameExceptionTest() {
+
     }
 }
